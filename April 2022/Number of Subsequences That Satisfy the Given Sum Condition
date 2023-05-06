@@ -1,0 +1,49 @@
+#define ll long long
+class Solution {
+public:
+    // Define a constant M for modular arithmetic
+    int M = 1e9+7;
+    
+    // Define a function for efficient modular exponentiation
+    ll binpow(ll a, ll b) {
+        ll res = 1;
+        while (b > 0) {
+            if (b & 1)
+                res = (res * a)%M;
+            a = (a * a)%M;
+            b >>= 1;
+        }
+        return res;
+    }
+    
+    int numSubseq(vector<int>& nums, int target) {
+        int n = nums.size();
+        int ans  = 0;
+        
+        // Sort the input array
+        sort(nums.begin(), nums.end());
+
+        // Iterate over each element of the array
+        for(int i = 0;i<n;i++){
+            int currIndex = i;
+            
+            // If the current element is less than or equal to half the target
+            if(target-nums[currIndex]>=nums[currIndex]){
+                
+                // Use upper_bound to find the index of the largest element in the array
+                // that is less than or equal to the target minus the current element
+                int index = upper_bound(nums.begin()+currIndex, nums.end(), (target-nums[currIndex]))-nums.begin();
+                
+                // If such an element exists
+                if(index!=currIndex){
+                    
+                    // Compute the number of subsequences that can be formed using the current
+                    // element and all elements up to and including the target minus the current element
+                    ans = ans%M+ binpow(2, (index-1-currIndex))%M;
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
